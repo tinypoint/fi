@@ -1,0 +1,6 @@
+.canvas-area {
+  position: absolute;
+  left: 240px;
+  height: 100%;
+  width: calc(100vw - 480px);
+}
