@@ -22,6 +22,19 @@ class Canvas extends Component {
     this.cycleRender(app.stage, this.props.json);
 
     this.app = app;
+
+    app.stage.interactive = true;
+    app.stage.on('mousedown'. this.onmousedown);
+    app.stage.on('mousemove'. this.onmousemove);
+    app.stage.on('mouseup'. this.onmouseup);
+  }
+
+  onmousedown = (event) => {
+
+  }
+
+  onmousemove = (event) => {
+
   }
 
   cycleRender = (parent, data) => {
@@ -52,7 +65,6 @@ class Canvas extends Component {
   }
 
   render() {
-    console.log(this.props.value);
     return (
       <div className="canvas-area" ref={(ref) => (this.canvasWrapper = ref)}></div>
     );
