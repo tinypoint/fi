@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import * as graphicsutils from "../../utils/graphics";
 
-class Rectangle extends PIXI.Graphics {
+class Frame extends PIXI.Graphics {
   constructor(option, props) {
     super();
     this._update(option, props);
@@ -37,4 +37,4 @@ class Rectangle extends PIXI.Graphics {
   };
 }
 
-export default Rectangle;
+export default Frame;

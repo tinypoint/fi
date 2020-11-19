@@ -1,25 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { utils } from "pixi.js";
 import { uid } from "uid";
-import * as jsonutils from './utils/json';
+import * as jsonutils from "./utils/json";
 
 const createInitState = () => {
   return {
-    id: uid(12),
+    id: utils.uid(),
     x: 0,
     y: 0,
     type: "artboard",
     children: [
       {
-        id: uid(12),
-        x: 100,
-        y: 20,
-        type: "rectangle",
+        id: utils.uid(),
+        x: 200,
+        y: 200,
+        type: "frame",
         background: ["#cccccc"],
         width: 200,
         height: 100,
         children: [
           {
+            id: utils.uid(),
             x: 10,
             y: 10,
             type: "rectangle",
@@ -30,13 +31,13 @@ const createInitState = () => {
         ],
       },
       {
-        id: uid(12),
+        id: utils.uid(),
         x: 120,
         y: 50,
         type: "rectangle",
-        background: ["#008899"],
-        width: 100,
-        height: 100,
+        background: ["#ccff99"],
+        width: 500,
+        height: 200,
       },
     ],
   };
@@ -48,14 +49,14 @@ export const canvasSlice = createSlice({
     json: createInitState(),
     select: [],
     hover: [],
-    activednav: 'frame',
+    activednav: "cursor",
   },
   reducers: {
     add: (state, action) => {
       const { payload = {} } = action;
       const { type, x, y, width, height } = payload;
       const node = {
-        id: uid(12),
+        id: utils.uid(),
         type,
         x,
         y,
@@ -66,14 +67,28 @@ export const canvasSlice = createSlice({
       };
 
       state.json.children.push(node);
+      state.select = [node.id];
+      state.activednav = "cursor";
     },
     select: (state, action) => {
       state.select = [action.payload];
+    },
+    clearSelect: (state) => {
+      state.select = [];
+    },
+    hover: (state, action) => {
+      state.hover = action.payload;
+    },
+    clearHover: (state) => {
+      state.sehoverlect = [];
     },
     propchange: (state, action) => {
       const newjson = JSON.parse(JSON.stringify(state.json));
       jsonutils.changeprops(newjson, action.payload);
       state.json = newjson;
+    },
+    changeActivedNav: (state, action) => {
+      state.activednav = action.payload;
     },
   },
 });
@@ -81,10 +96,14 @@ export const canvasSlice = createSlice({
 export const {
   add,
   select,
+  clearSelect,
+  hover,
+  clearHover,
   propchange,
   increment,
   decrement,
   incrementByAmount,
+  changeActivedNav,
 } = canvasSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It

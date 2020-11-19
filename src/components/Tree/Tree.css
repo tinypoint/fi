@@ -1,0 +1,45 @@
+.tree-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100%;
+  border-right: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.tree-leaf {
+  position: relative;
+  height: 32px;
+  line-height: 32px;
+  cursor: pointer;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  user-select: none;
+  font-size: 12px;
+}
+
+.tree-leaf .visible-tool {
+  display: none;
+  position: absolute;
+  height: 32px;
+  top: 0;
+  right: 8px;
+}
+
+.tree-leaf.hoverd {
+  border: 1px solid #ccc;
+}
+
+.tree-leaf.hoverd .visible-tool {
+  display: block;
+}
+
+.tree-leaf.selected {
+  background-color: #cccccc60;
+  border: 1px solid transparent;
+}
+
+.tree-leaf-body.selected {
+  background-color: #cccccc30;
+}

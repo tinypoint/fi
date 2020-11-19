@@ -1,7 +1,9 @@
-import Artboard from './artboard/artboard';
-import Rectangle from './rectangle/rectangle';
+import Artboard from "./artboard/artboard";
+import Frame from "./frame/frame";
+import Rectangle from "./rectangle/rectangle";
 
 export default {
   artboard: Artboard,
-  rectangle: Rectangle
-}
+  frame: Frame,
+  rectangle: Rectangle,
+};
