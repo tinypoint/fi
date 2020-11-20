@@ -4,6 +4,7 @@ import React from 'react';
 import Nav from './components/Nav/Nav';
 import Tree from './components/Tree/Tree';
 import Canvas from './components/Canvas/Canvas';
+import Right from './components/Right/Right';
 import './App.css';
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
       <div className="content">
         <Tree />
         <Canvas />
-        <div className="right-area" /> 
+        <Right />
       </div>
     </>
   );

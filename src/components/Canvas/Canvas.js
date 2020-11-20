@@ -3,24 +3,9 @@ import * as PIXI from "pixi.js";
 import { connect } from "react-redux";
 import { add, propchange, select, clearSelect, hover } from "./canvasSlice";
 import objects from "./objects";
+import * as jsonutils from "./utils/json";
 import * as graphicsutils from "./utils/graphics";
 import "./Canvas.css";
-
-const search = (parent, id) => {
-  if (parent.option && parent.option.id === id) {
-    return parent;
-  } else {
-    const { children = [] } = parent;
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
-      const target = search(child, id);
-      if (target) {
-        return target;
-      }
-    }
-    return null;
-  }
-};
 
 const style = new PIXI.TextStyle({
   fontFamily: "Arial",
@@ -486,14 +471,19 @@ class Canvas extends Component {
     if (selectupdate) {
       const id = this.props.select[0];
       if (id) {
-        const res = search(this.app.stage, id);
-        const globalPosition = res.getGlobalPosition();
-        this.showSelect(
-          globalPosition.x,
-          globalPosition.y,
-          res.option.width,
-          res.option.height
-        );
+        const res = jsonutils.searchIns(this.app.stage.node, id);
+
+        if (res) {
+          const globalPosition = res.getGlobalPosition();
+          this.showSelect(
+            globalPosition.x,
+            globalPosition.y,
+            res.option.width,
+            res.option.height
+          );
+        } else {
+          this.hideSelect();
+        }
       } else {
         this.hideSelect();
       }
@@ -501,8 +491,8 @@ class Canvas extends Component {
     if (jsonupdate || selectupdate || hoverupdate) {
       const id = this.props.hover[0];
       if (id) {
-        const res = search(this.app.stage, id);
-        if (this.props.select.indexOf(id) < 0) {
+        const res = jsonutils.searchIns(this.app.stage, id);
+        if (res && this.props.select.indexOf(id) < 0) {
           this.showHover(
             res.worldTransform.tx,
             res.worldTransform.ty,

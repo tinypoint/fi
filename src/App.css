@@ -6,23 +6,3 @@
   bottom: 0;
 }
 
-.left-area {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 240px;
-  height: 100%;
-  border-right: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-.right-area {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 240px;
-  height: 100%;
-  border-left: 1px solid #ccc;
-  box-sizing: border-box;
-}
-

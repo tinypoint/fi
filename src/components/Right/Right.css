@@ -1,0 +1,119 @@
+.right-area {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 240px;
+  height: 100%;
+  border-left: 1px solid #ccc;
+  box-sizing: border-box;
+  overflow: hidden;
+  user-select: none;
+}
+
+.right-area-tab-header {
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 40px;
+  line-height: 40px;
+}
+
+.right-area-tab {
+  padding: 0 8px;
+  position: relative;
+  color: #b3b3b3;
+}
+
+.right-area-tab:hover {
+  color: #333;
+}
+
+.right-area-tab:first-child {
+  padding-left: 16px;
+}
+
+.right-area-raw-panel {
+  border-bottom: 1px solid #e5e5e5;
+  padding: 8px 0;
+}
+
+.right-area-raw-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.right-area-raw-iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  flex: 0 0 32px;
+  line-height: 32px;
+  fill: #333;
+  color: #333;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  position: relative;
+  border-radius: 2px;
+  background-clip: padding-box;
+  background-color: transparent;
+}
+
+.right-area-raw-iconButton:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  fill: #333;
+  color: #333;
+  border-radius: 3px;
+}
+
+.right-area-field-container {
+  cursor: ew-resize;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+  height: 28px;
+  margin: 1px 0;
+  box-sizing: border-box;
+}
+
+.right-area-field-container:hover {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.right-area-field-container:focus-within {
+  height: 30px;
+  margin: 0;
+  border: 1px solid #18a0fb;
+  outline: 1px solid #18a0fb;
+  outline-offset: -2px;
+}
+
+.right-area-field-label {
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  flex: 0 0 32px;
+  line-height: 32px;
+  font-size: 11px;
+  color: #b3b3b3;
+  fill: #b3b3b3;
+  grid-column-end: span 4;
+  pointer-events: none;
+  text-align: center;
+}
+
+.right-area-input {
+  background-color: transparent;
+  width: 100%;
+  padding: 0 0 0 7px;
+  height: 28px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  min-width: 0;
+  outline: none;
+}
