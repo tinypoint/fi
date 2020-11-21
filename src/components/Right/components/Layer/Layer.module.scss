@@ -1,0 +1,68 @@
+.panel {
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.panelTitle {
+  font-weight: 600;
+  line-height: 32px;
+  padding-left: 8px;
+}
+
+.row {
+  padding: 0 8px;
+  height: 32px;
+}
+
+.blendMode {
+  width: 100%;
+  padding-left: 8px;
+  font-size: 12px;
+  border-color: transparent;
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.85);
+    border-color: #d9d9d9;
+  }
+}
+
+.item {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.icon {
+  font-size: 10px;
+}
+
+.right {
+  display: flex;
+}
+
+.alpha {
+  flex: 1;
+  font-size: 12px;
+  border-color: transparent;
+
+  :global .ant-input-number-input {
+    padding: 0 8px;
+  }
+
+  :global .ant-input-number-handler-wrap {
+    display: none;
+  }
+
+  &:hover {
+    border-color: #d9d9d9;
+  }
+}
+
+.visible {
+  svg {
+    vertical-align: text-top;
+  }
+
+  &:hover {
+    background-color: #d9d9d9;
+  }
+}

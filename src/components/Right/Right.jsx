@@ -10,6 +10,9 @@ import {
   clearSelect,
 } from "../Canvas/canvasSlice";
 import * as jsonutils from "../Canvas/utils/json";
+import Panel from "./components/Panel/Panel";
+import Layer from "./components/Layer/Layer";
+import Fill from "./components/Fill/Fill";
 import "./Right.css";
 
 import alignStart from "bootstrap-icons/icons/align-start.svg";
@@ -21,13 +24,15 @@ import alignBottom from "bootstrap-icons/icons/align-bottom.svg";
 
 class Right extends Component {
   render() {
-    const { select, json, dispatch } = this.props;
+    const { select, json, cacheposi, dispatch } = this.props;
 
     if (!select[0]) {
       return null;
     }
-
     const sel = jsonutils.search(json, select[0]);
+    const { width = sel.width, height = sel.height, x = sel.x, y = sel.y } =
+      cacheposi || {};
+    // const sel = cacheposi;
     return (
       <div className="right-area">
         <div className="right-area-tab-header">
@@ -35,6 +40,7 @@ class Right extends Component {
           <div className="right-area-tab">Prototype</div>
           <div className="right-area-tab">Inspect</div>
         </div>
+
         <div className="right-area-raw-panel">
           <div className="right-area-raw-row">
             <div className="right-area-raw-iconButton">
@@ -64,7 +70,7 @@ class Right extends Component {
               <input
                 type="text"
                 className="right-area-input"
-                value={sel.x}
+                value={x}
                 onChange={() => {}}
               />
             </label>
@@ -73,7 +79,7 @@ class Right extends Component {
               <input
                 type="text"
                 className="right-area-input"
-                value={sel.y}
+                value={y}
                 onChange={() => {}}
               />
             </label>
@@ -84,7 +90,7 @@ class Right extends Component {
               <input
                 type="text"
                 className="right-area-input"
-                value={sel.width}
+                value={width}
                 onChange={() => {}}
               />
             </label>
@@ -93,7 +99,7 @@ class Right extends Component {
               <input
                 type="text"
                 className="right-area-input"
-                value={sel.height}
+                value={height}
                 onChange={() => {}}
               />
             </label>
@@ -109,6 +115,11 @@ class Right extends Component {
             </label>
           </div>
         </div>
+
+        <Panel>
+          <Layer />
+          <Fill />
+        </Panel>
       </div>
     );
   }
@@ -120,6 +131,7 @@ export default connect(
       json: state.canvas.json,
       select: state.canvas.select,
       hover: state.canvas.hover,
+      cacheposi: state.canvas.cacheposi,
     };
   },
   (dispatch) => {

@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { utils } from "pixi.js";
-import { uid } from "uid";
 import * as jsonutils from "./utils/json";
 
 const createInitState = () => {
@@ -10,26 +9,26 @@ const createInitState = () => {
     y: 0,
     type: "artboard",
     children: [
-      {
-        id: utils.uid(),
-        x: 200,
-        y: 200,
-        type: "frame",
-        background: ["#cccccc"],
-        width: 200,
-        height: 100,
-        children: [
-          {
-            id: utils.uid(),
-            x: 10,
-            y: 10,
-            type: "rectangle",
-            background: ["#aa99bcc"],
-            width: 50,
-            height: 80,
-          },
-        ],
-      },
+      // {
+      //   id: utils.uid(),
+      //   x: 200,
+      //   y: 200,
+      //   type: "frame",
+      //   background: ["#cccccc"],
+      //   width: 200,
+      //   height: 100,
+      //   children: [
+      //     {
+      //       id: utils.uid(),
+      //       x: 10,
+      //       y: 10,
+      //       type: "rectangle",
+      //       background: ["#aa99bcc"],
+      //       width: 50,
+      //       height: 80,
+      //     },
+      //   ],
+      // },
       {
         id: utils.uid(),
         x: 120,
@@ -50,6 +49,7 @@ export const canvasSlice = createSlice({
     select: [],
     hover: [],
     activednav: "cursor",
+    cacheposi: {},
   },
   reducers: {
     add: (state, action) => {
@@ -82,6 +82,11 @@ export const canvasSlice = createSlice({
     clearHover: (state) => {
       state.sehoverlect = [];
     },
+    changeCachePosi: (state, action) => {
+      state.cacheposi = {
+        ...(action.payload || {}),
+      };
+    },
     propchange: (state, action) => {
       const newjson = JSON.parse(JSON.stringify(state.json));
       jsonutils.changeprops(newjson, action.payload);
@@ -104,6 +109,7 @@ export const {
   decrement,
   incrementByAmount,
   changeActivedNav,
+  changeCachePosi,
 } = canvasSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It

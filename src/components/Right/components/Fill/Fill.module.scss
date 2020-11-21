@@ -1,0 +1,75 @@
+.panel {
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.panelTitle {
+  font-weight: 600;
+  line-height: 32px;
+  padding-left: 8px;
+}
+
+.row {
+  padding: 0 8px;
+  height: 32px;
+}
+
+.colorContainer {
+  width: 100%;
+}
+
+.color {
+  width: 60%;
+  border-color: transparent;
+
+  &:hover {
+    border-color: #d9d9d9;
+  }
+}
+
+.colorPicker {
+  width: 16px;
+  height: 16px;
+}
+
+.colorPickerPop {
+  width: 200px;
+  height: 400px;
+}
+
+.icon {
+  font-size: 10px;
+}
+
+.right {
+  display: flex;
+}
+
+.alpha {
+  width: 40%;
+  flex: 1;
+  font-size: 12px;
+  border-color: transparent;
+
+  :global .ant-input-number-input {
+    padding: 0 8px;
+  }
+
+  :global .ant-input-number-handler-wrap {
+    display: none;
+  }
+
+  &:hover {
+    border-color: #d9d9d9;
+  }
+}
+
+.visible {
+  svg {
+    vertical-align: text-top;
+  }
+
+  &:hover {
+    background-color: #d9d9d9;
+  }
+}

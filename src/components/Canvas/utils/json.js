@@ -30,13 +30,13 @@ export const search = (json, id) => {
 };
 
 export const searchIns = (parent, id) => {
-  if (parent.node && parent.node.option && parent.node.option.id === id) {
+  if (parent && parent.option && parent.option.id === id) {
     return parent;
   } else {
     const { children = [] } = parent;
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
-      const target = search(child, id);
+      const target = searchIns(child, id);
       if (target) {
         return target;
       }

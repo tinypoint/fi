@@ -24,8 +24,8 @@ class Frame extends PIXI.Graphics {
     this.beginFill(PIXI.utils.string2hex(background[0]));
     this.drawRect(0, 0, width, height);
     this.endFill();
-    // this.x = x;
-    // this.y = y;
+    this.x = x;
+    this.y = y;
     this.alpha = alpha;
     this.interactive = true;
     // this.buttonMode = true;

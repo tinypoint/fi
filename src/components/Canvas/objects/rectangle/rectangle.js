@@ -24,16 +24,27 @@ class Rectangle extends PIXI.Graphics {
     this.beginFill(PIXI.utils.string2hex(background[0]));
     this.drawRect(0, 0, width, height);
     this.endFill();
-    // this.x = x;
-    // this.y = y;
+    this.x = x;
+    this.y = y;
     this.alpha = alpha;
     this.interactive = true;
-    // this.buttonMode = true;
+    this.buttonMode = true;
 
     /* <--   --> */
     // if (select.indexOf(id) > -1) {
     //   graphicsutils.select(this, 0, 0, width, height);
     // }
+  };
+
+  _updateTransform = (option) => {
+    const { x, y, width, height } = option;
+    const { background = ["#cccccc"] } = this.option;
+    this.clear();
+    this.beginFill(PIXI.utils.string2hex(background[0]));
+    this.drawRect(0, 0, width, height);
+    this.endFill();
+    this.x = x;
+    this.y = y;
   };
 }
 
