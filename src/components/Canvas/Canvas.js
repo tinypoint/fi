@@ -1,52 +1,66 @@
-import React, { Component } from "react";
-import * as PIXI from "pixi.js";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import * as PIXI from 'pixi.js';
+import { connect } from 'react-redux';
 import {
   add,
   propchange,
   select,
   clearSelect,
   hover,
-  changeCachePosi,
-} from "./canvasSlice";
-import objects from "./objects";
-import * as jsonutils from "./utils/json";
-import * as graphicsutils from "./utils/graphics";
-import "./Canvas.css";
+  changeCachePosi
+} from './canvasSlice';
+import objects from './objects';
+import * as jsonutils from './utils/json';
+import * as graphicsutils from './utils/graphics';
+import './Canvas.css';
 
 const style = new PIXI.TextStyle({
-  fontFamily: "Arial",
+  fontFamily: 'Arial',
   fontSize: 14,
-  fill: "#00ff99",
+  fill: '#00ff99'
 });
+
+const formatNum = num => {
+  return Number(Number(num).toFixed(2));
+};
 
 class Canvas extends Component {
   canvasWrapper = null;
 
   info = null;
 
-  onMouseDown = (event) => {
+  onMouseDown = event => {
     this.info = null;
     const { activednav, dispatch } = this.props;
-    if (activednav === "cursor") {
+    if (activednav === 'cursor') {
       if (event.target) {
         if (event.target.option) {
-          if (event.target.option.type === "corner") {
+          if (event.target.option.type === 'corner') {
             const target = jsonutils.searchIns(
               this.renderlayer,
               this.props.select[0]
             );
             this.info = {
-              type: "resize",
+              type: 'resize',
               target,
               ...event.data.global,
-              dir: event.target.option.dir,
+              dir: event.target.option.dir
+            };
+          } else if (event.target.option.type === 'rotateCorner') {
+            const target = jsonutils.searchIns(
+              this.renderlayer,
+              this.props.select[0]
+            );
+            this.info = {
+              type: 'rotate',
+              target,
+              ...event.data.global
             };
           } else {
             this.info = {
-              type: "move",
+              type: 'move',
               target: event.target,
-              ...event.data.global,
+              ...event.data.global
             };
             dispatch(select(event.target.option.id));
           }
@@ -56,16 +70,16 @@ class Canvas extends Component {
       } else {
         dispatch(clearSelect());
         this.info = {
-          type: "boxselect",
+          type: 'boxselect',
           target: event.target,
-          ...event.data.global,
+          ...event.data.global
         };
       }
     } else {
       this.info = {
         type: activednav,
         target: event.target,
-        ...event.data.global,
+        ...event.data.global
       };
       dispatch(clearSelect());
     }
@@ -80,76 +94,82 @@ class Canvas extends Component {
     const { global } = this.app.renderer.plugins.interaction.mouse;
     const movex = global.x - x;
     const movey = global.y - y;
-    if (type === "move") {
-      target.x = target.option.x + movex;
-      target.y = target.option.y + movey;
-      const bound = target.getBounds();
+    if (type === 'move') {
+      const props = {
+        id: target.option.id,
+        x: formatNum(target.option.x + movex),
+        y: formatNum(target.option.y + movey),
+        width: formatNum(target.option.width),
+        height: formatNum(target.option.height)
+      };
 
-      this.showSelect(bound.x, bound.y, bound.width, bound.height);
+      target._updateTransform(props);
+      // const bound = target.getBounds();
 
-      this.props.dispatch(
-        changeCachePosi({
-          x: bound.x,
-          y: bound.y,
-          width: bound.width,
-          height: bound.height,
-        })
-      );
-    } else if (type === "boxselect") {
+      this.showSelect(props.x, props.y, props.width, props.height);
+
+      this.props.dispatch(changeCachePosi(props));
+    } else if (type === 'boxselect') {
       this.showBoxSelectlayer(x, y, movex, movey);
-    } else if (type === "frame" || type === "rectangle") {
+    } else if (type === 'frame' || type === 'rectangle') {
       this.showCreatelayer(x, y, movex, movey);
-    } else if (type === "resize") {
+    } else if (type === 'resize') {
       const { dir } = this.info;
       const props = {
         id: target.option.id,
-        x: target.option.x,
-        y: target.option.y,
-        width: target.option.width,
-        height: target.option.height,
+        x: formatNum(target.option.x),
+        y: formatNum(target.option.y),
+        width: formatNum(target.option.width),
+        height: formatNum(target.option.height)
       };
-      if (dir === "n") {
-        props.y = target.option.y + movey;
-        props.height = target.option.height - movey;
-      } else if (dir === "e") {
-        props.width = target.option.width + movex;
-      } else if (dir === "w") {
-        props.x = target.option.x + movex;
-        props.width = target.option.width - movex;
-      } else if (dir === "s") {
-        props.height = target.option.height + movey;
-      } else if (dir === "ne") {
-        props.y = target.option.y + movey;
-        props.height = target.option.height - movey;
-        props.width = target.option.width + movex;
-      } else if (dir === "nw") {
-        props.y = target.option.y + movey;
-        props.height = target.option.height - movey;
-        props.x = target.option.x + movex;
-        props.width = target.option.width - movex;
-      } else if (dir === "se") {
-        props.height = target.option.height + movey;
-        props.width = target.option.width + movex;
-      } else if (dir === "sw") {
-        props.height = target.option.height + movey;
-        props.x = target.option.x + movex;
-        props.width = target.option.width - movex;
+      if (dir === 'n') {
+        props.y = formatNum(target.option.y + movey);
+        props.height = formatNum(target.option.height - movey);
+      } else if (dir === 'e') {
+        props.width = formatNum(target.option.width + movex);
+      } else if (dir === 'w') {
+        props.x = formatNum(target.option.x + movex);
+        props.width = formatNum(target.option.width - movex);
+      } else if (dir === 's') {
+        props.height = formatNum(target.option.height + movey);
+      } else if (dir === 'ne') {
+        props.y = formatNum(target.option.y + movey);
+        props.height = formatNum(target.option.height - movey);
+        props.width = formatNum(target.option.width + movex);
+      } else if (dir === 'nw') {
+        props.y = formatNum(target.option.y + movey);
+        props.height = formatNum(target.option.height - movey);
+        props.x = formatNum(target.option.x + movex);
+        props.width = formatNum(target.option.width - movex);
+      } else if (dir === 'se') {
+        props.height = formatNum(target.option.height + movey);
+        props.width = formatNum(target.option.width + movex);
+      } else if (dir === 'sw') {
+        props.height = formatNum(target.option.height + movey);
+        props.x = formatNum(target.option.x + movex);
+        props.width = formatNum(target.option.width - movex);
       }
 
       target._updateTransform(props);
 
-      const bound = target.getBounds();
+      // const bound = target.getBounds();
 
-      this.showSelect(bound.x, bound.y, bound.width, bound.height);
+      this.showSelect(props.x, props.y, props.width, props.height);
 
       this.props.dispatch(
         changeCachePosi({
-          x: bound.x,
-          y: bound.y,
-          width: bound.width,
-          height: bound.height,
+          x: props.x,
+          y: props.y,
+          width: props.width,
+          height: props.height
         })
       );
+    } else if (type === 'rotate') {
+      const props = {
+        id: target.option.id,
+        angle: target.option.angle + Math.random() * 90
+      };
+      target._updateTransform(props);
     }
   };
 
@@ -162,20 +182,19 @@ class Canvas extends Component {
     const movex = global.x - x;
     const movey = global.y - y;
 
-    if (type === "move") {
-      if (target.option.x !== target.x || target.option.y !== target.y) {
-        this.props.dispatch(
-          propchange({
-            id: target.option.id,
-            x: target.option.x + movex,
-            y: target.option.y + movey,
-          })
-        );
+    if (type === 'move') {
+      const props = {
+        id: target.option.id,
+        x: formatNum(target.x),
+        y: formatNum(target.y)
+      };
+      if (target.option.x !== props.x || target.option.y !== props.y) {
+        this.props.dispatch(propchange(props));
       }
       this.props.dispatch(changeCachePosi(null));
-    } else if (type === "boxselect") {
+    } else if (type === 'boxselect') {
       this.hideBoxSelectlayer();
-    } else if (type === "frame" || type === "rectangle") {
+    } else if (type === 'frame' || type === 'rectangle') {
       this.hideCreatelayer();
       this.props.dispatch(
         add({
@@ -183,52 +202,51 @@ class Canvas extends Component {
           x,
           y,
           width: global.x - x,
-          height: global.y - y,
+          height: global.y - y
         })
       );
-    } else if (type === "resize") {
+    } else if (type === 'resize') {
       const { dir } = this.info;
+      const props = {
+        id: target.option.id,
+        x: formatNum(target.option.x),
+        y: formatNum(target.option.y),
+        width: formatNum(target.option.width),
+        height: formatNum(target.option.height)
+      };
+      if (dir === 'n') {
+        props.y = formatNum(target.option.y + movey);
+        props.height = formatNum(target.option.height - movey);
+      } else if (dir === 'e') {
+        props.width = formatNum(target.option.width + movex);
+      } else if (dir === 'w') {
+        props.x = formatNum(target.option.x + movex);
+        props.width = formatNum(target.option.width - movex);
+      } else if (dir === 's') {
+        props.height = formatNum(target.option.height + movey);
+      } else if (dir === 'ne') {
+        props.y = formatNum(target.option.y + movey);
+        props.height = formatNum(target.option.height - movey);
+        props.width = formatNum(target.option.width + movex);
+      } else if (dir === 'nw') {
+        props.y = formatNum(target.option.y + movey);
+        props.height = formatNum(target.option.height - movey);
+        props.x = formatNum(target.option.x + movex);
+        props.width = formatNum(target.option.width - movex);
+      } else if (dir === 'se') {
+        props.height = formatNum(target.option.height + movey);
+        props.width = formatNum(target.option.width + movex);
+      } else if (dir === 'sw') {
+        props.height = formatNum(target.option.height + movey);
+        props.x = formatNum(target.option.x + movex);
+        props.width = formatNum(target.option.width - movex);
+      }
       if (
-        target.option.x !== target.x ||
-        target.option.y !== target.y ||
-        target.option.width !== target.width ||
-        target.option.height !== target.height
+        target.option.x !== props.x ||
+        target.option.y !== props.y ||
+        target.option.width !== props.width ||
+        target.option.height !== props.height
       ) {
-        const props = {
-          id: target.option.id,
-          x: target.option.x,
-          y: target.option.y,
-          width: target.option.width,
-          height: target.option.height,
-        };
-        if (dir === "n") {
-          props.y = target.option.y + movey;
-          props.height = target.option.height - movey;
-        } else if (dir === "e") {
-          props.width = target.option.width + movex;
-        } else if (dir === "w") {
-          props.x = target.option.x + movex;
-          props.width = target.option.width - movex;
-        } else if (dir === "s") {
-          props.height = target.option.height + movey;
-        } else if (dir === "ne") {
-          props.y = target.option.y + movey;
-          props.height = target.option.height - movey;
-          props.width = target.option.width + movex;
-        } else if (dir === "nw") {
-          props.y = target.option.y + movey;
-          props.height = target.option.height - movey;
-          props.x = target.option.x + movex;
-          props.width = target.option.width - movex;
-        } else if (dir === "se") {
-          props.height = target.option.height + movey;
-          props.width = target.option.width + movex;
-        } else if (dir === "sw") {
-          props.height = target.option.height + movey;
-          props.x = target.option.x + movex;
-          props.width = target.option.width - movex;
-        }
-
         this.props.dispatch(propchange(props));
       }
       this.props.dispatch(changeCachePosi(null));
@@ -238,7 +256,7 @@ class Canvas extends Component {
   };
 
   onHover = () => {
-    if (this.info && this.info.type === "boxselect") {
+    if (this.info && this.info.type === 'boxselect') {
       // 框选时，hover逻辑由框选做
       return;
     }
@@ -253,48 +271,48 @@ class Canvas extends Component {
     this.selectlayer.visible = false;
     const top = new PIXI.Graphics();
     top.option = {
-      type: "corner",
-      dir: "n",
+      type: 'corner',
+      dir: 'n'
     };
     top.interactive = true;
     top.buttonMode = true;
-    top.cursor = "ns-resize";
+    top.cursor = 'ns-resize';
 
     const bottom = new PIXI.Graphics();
     bottom.option = {
-      type: "corner",
-      dir: "s",
+      type: 'corner',
+      dir: 's'
     };
     bottom.interactive = true;
     bottom.buttonMode = true;
-    bottom.cursor = "ns-resize";
+    bottom.cursor = 'ns-resize';
 
     const left = new PIXI.Graphics();
     left.option = {
-      type: "corner",
-      dir: "w",
+      type: 'corner',
+      dir: 'w'
     };
     left.interactive = true;
     left.buttonMode = true;
-    left.cursor = "ew-resize";
+    left.cursor = 'ew-resize';
 
     const right = new PIXI.Graphics();
     right.option = {
-      type: "corner",
-      dir: "e",
+      type: 'corner',
+      dir: 'e'
     };
     right.interactive = true;
     right.buttonMode = true;
-    right.cursor = "ew-resize";
+    right.cursor = 'ew-resize';
 
     const topLeft = new PIXI.Graphics();
     topLeft.option = {
-      type: "corner",
-      dir: "nw",
+      type: 'corner',
+      dir: 'nw'
     };
     topLeft.interactive = true;
     topLeft.buttonMode = true;
-    topLeft.cursor = "nwse-resize";
+    topLeft.cursor = 'nwse-resize';
     topLeft.beginFill(0xffffff);
     topLeft.drawRect(0, 0, 8, 8);
     topLeft.endFill();
@@ -303,12 +321,12 @@ class Canvas extends Component {
 
     const topRight = new PIXI.Graphics();
     topRight.option = {
-      type: "corner",
-      dir: "ne",
+      type: 'corner',
+      dir: 'ne'
     };
     topRight.interactive = true;
     topRight.buttonMode = true;
-    topRight.cursor = "nesw-resize";
+    topRight.cursor = 'nesw-resize';
     topRight.beginFill(0xffffff);
     topRight.drawRect(0, 0, 8, 8);
     topRight.endFill();
@@ -317,12 +335,12 @@ class Canvas extends Component {
 
     const bottomLeft = new PIXI.Graphics();
     bottomLeft.option = {
-      type: "corner",
-      dir: "sw",
+      type: 'corner',
+      dir: 'sw'
     };
     bottomLeft.interactive = true;
     bottomLeft.buttonMode = true;
-    bottomLeft.cursor = "nesw-resize";
+    bottomLeft.cursor = 'nesw-resize';
     bottomLeft.beginFill(0xffffff);
     bottomLeft.drawRect(0, 0, 8, 8);
     bottomLeft.endFill();
@@ -331,23 +349,35 @@ class Canvas extends Component {
 
     const bottomRight = new PIXI.Graphics();
     bottomRight.option = {
-      type: "corner",
-      dir: "se",
+      type: 'corner',
+      dir: 'se'
     };
     bottomRight.interactive = true;
     bottomRight.buttonMode = true;
-    bottomRight.cursor = "nwse-resize";
+    bottomRight.cursor = 'nwse-resize';
     bottomRight.beginFill(0xffffff);
     bottomRight.drawRect(0, 0, 8, 8);
     bottomRight.endFill();
     bottomRight.lineStyle(1, 0x337cd6, 1, 0);
     bottomRight.drawRect(0, 0, 8, 8);
 
+    const rotateCorner = new PIXI.Graphics();
+    rotateCorner.option = {
+      type: 'rotateCorner'
+    };
+    rotateCorner.interactive = true;
+    rotateCorner.buttonMode = true;
+    rotateCorner.cursor = 'alias';
+    rotateCorner.beginFill(0xcccccc);
+    rotateCorner.drawRect(0, 0, 16, 16);
+    rotateCorner.endFill();
+
     this.selectlayer.addChild(top);
     this.selectlayer.addChild(bottom);
     this.selectlayer.addChild(left);
     this.selectlayer.addChild(right);
     this.selectlayer.addChild(topLeft);
+    this.selectlayer.addChild(rotateCorner);
     this.selectlayer.addChild(topRight);
     this.selectlayer.addChild(bottomLeft);
     this.selectlayer.addChild(bottomRight);
@@ -359,6 +389,7 @@ class Canvas extends Component {
     this.selectlayer.topRight = topRight;
     this.selectlayer.bottomLeft = bottomLeft;
     this.selectlayer.bottomRight = bottomRight;
+    this.selectlayer.rotateCorner = rotateCorner;
 
     this.app.stage.addChild(this.selectlayer);
   };
@@ -373,6 +404,7 @@ class Canvas extends Component {
       topRight,
       bottomLeft,
       bottomRight,
+      rotateCorner
     } = this.selectlayer;
     this.selectlayer.visible = true;
 
@@ -423,6 +455,9 @@ class Canvas extends Component {
 
     bottomRight.x = x - 5 + width;
     bottomRight.y = y - 5 + height;
+
+    rotateCorner.x = x - 5 + width;
+    rotateCorner.y = y - 11;
   };
 
   hideSelect = () => {
@@ -499,13 +534,13 @@ class Canvas extends Component {
     this.app.stage.addChild(this.renderlayer);
   };
 
-  _cycleRender = (json) => {
+  _cycleRender = json => {
     const { select, hover, dispatch } = this.props;
     const { type, children = [], x, y } = json;
     const node = new objects[type](json, {
       select,
       hover,
-      dispatch,
+      dispatch
     }); // displayobject
 
     // const container = new PIXI.Container();
@@ -523,7 +558,7 @@ class Canvas extends Component {
     // basicText.y = -18;
     // tool.addChild(basicText);
 
-    children.forEach((child) => {
+    children.forEach(child => {
       const childnode = this._cycleRender(child);
       node.addChild(childnode);
     });
@@ -543,12 +578,12 @@ class Canvas extends Component {
         const node = new objects[type](newjson, {
           select,
           hover,
-          dispatch,
+          dispatch
         });
 
         parent.removeChildAt(index);
         parent.addChildAt(node, index);
-        children.forEach((child) => {
+        children.forEach(child => {
           const childnode = this._cycleRender(child);
           node.addChild(childnode);
         });
@@ -561,7 +596,7 @@ class Canvas extends Component {
           node._update(newjson, {
             select,
             hover,
-            dispatch,
+            dispatch
           });
         children.forEach((child, index) => {
           this.diff(node, index, oldjson.children[index], child);
@@ -578,7 +613,7 @@ class Canvas extends Component {
       antialias: true,
       preserveDrawingBuffer: true,
       resolution: window.devicePixelRatio || 1,
-      resizeTo: this.canvasWrapper,
+      resizeTo: this.canvasWrapper
     });
     this.canvasWrapper.appendChild(app.view);
 
@@ -590,9 +625,9 @@ class Canvas extends Component {
     this.initBoxSelectlayer();
     this.initCreatelayer();
 
-    this.app.renderer.plugins.interaction.on("mousedown", this.onMouseDown);
-    window.addEventListener("mousemove", this.onMouseMove);
-    window.addEventListener("mouseup", this.onMouseUp);
+    this.app.renderer.plugins.interaction.on('mousedown', this.onMouseDown);
+    window.addEventListener('mousemove', this.onMouseMove);
+    window.addEventListener('mouseup', this.onMouseUp);
   }
 
   componentDidUpdate(props) {
@@ -641,9 +676,9 @@ class Canvas extends Component {
   }
 
   componentWillUnmount() {
-    this.app.renderer.plugins.interaction.off("mousedown", this.onMouseDown);
-    window.removeEventListener("mousemove", this.onMouseMove);
-    window.removeEventListener("mouseup", this.onMouseUp);
+    this.app.renderer.plugins.interaction.off('mousedown', this.onMouseDown);
+    window.removeEventListener('mousemove', this.onMouseMove);
+    window.removeEventListener('mouseup', this.onMouseUp);
     this.canvasWrapper.removeChild(this.app.view);
     this.app.destroy(true);
     this.app = null;
@@ -653,7 +688,7 @@ class Canvas extends Component {
     return (
       <div
         className="canvas-area"
-        ref={(ref) => (this.canvasWrapper = ref)}
+        ref={ref => (this.canvasWrapper = ref)}
         onMouseMove={this.onHover}
       ></div>
     );
@@ -661,17 +696,17 @@ class Canvas extends Component {
 }
 
 export default connect(
-  (state) => {
+  state => {
     return {
       json: state.canvas.json,
       select: state.canvas.select,
       hover: state.canvas.hover,
-      activednav: state.canvas.activednav,
+      activednav: state.canvas.activednav
     };
   },
-  (dispatch) => {
+  dispatch => {
     return {
-      dispatch: dispatch,
+      dispatch: dispatch
     };
   }
 )(Canvas);

@@ -35,8 +35,9 @@ const createInitState = () => {
         y: 50,
         type: "rectangle",
         background: ["#ccff99"],
-        width: 500,
-        height: 200,
+        width: 200,
+        height: 180,
+        angle: 0
       },
     ],
   };
