@@ -9,35 +9,33 @@ const createInitState = () => {
     y: 0,
     type: "artboard",
     children: [
-      // {
-      //   id: utils.uid(),
-      //   x: 200,
-      //   y: 200,
-      //   type: "frame",
-      //   background: ["#cccccc"],
-      //   width: 200,
-      //   height: 100,
-      //   children: [
-      //     {
-      //       id: utils.uid(),
-      //       x: 10,
-      //       y: 10,
-      //       type: "rectangle",
-      //       background: ["#aa99bcc"],
-      //       width: 50,
-      //       height: 80,
-      //     },
-      //   ],
-      // },
       {
         id: utils.uid(),
-        x: 120,
+        x: 50,
         y: 50,
         type: "rectangle",
-        background: ["#ccff99"],
+        alpha: 1,
+        visible: true,
+        backgrounds: [
+          {
+            colorType: "solid",
+            color: "#ffccaa",
+            visible: true,
+            alpha: 1,
+          },
+        ],
+        strokeAlignment: 0,
+        strokeWidth: 1,
+        strokes: [
+          {
+            color: "#000000",
+            colorType: "solid",
+            visible: true,
+          },
+        ],
         width: 200,
         height: 180,
-        angle: 0
+        angle: 0,
       },
     ],
   };
@@ -63,7 +61,7 @@ export const canvasSlice = createSlice({
         y,
         width,
         height,
-        background: ["#abcdef"],
+        backgrounds: ["#abcdef"],
         children: [],
       };
 

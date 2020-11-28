@@ -99,7 +99,13 @@ for (let index of Object.keys(BLEND_MODES)) {
 // ];
 
 const Layer = (props) => {
-  const { alpha = 1, blendMode = 0, visible, onChange = () => {} } = props;
+  const {
+    alpha = 1,
+    blendMode = 0,
+    visible,
+    onChange = () => {},
+    onChangeComplete = () => {},
+  } = props;
 
   const ret = useMemo(() => {
     const menu = (
@@ -155,7 +161,16 @@ const Layer = (props) => {
                 max={100}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value.replace("%", "")}
-                onChange={onChange}
+                onBlur={(e) => {
+                  onChangeComplete({
+                    alpha: Number(e.target.value.replace("%", "")) / 100,
+                  });
+                }}
+                onPressEnter={(e) => {
+                  onChangeComplete({
+                    alpha: Number(e.target.value.replace("%", "")) / 100,
+                  });
+                }}
                 className={styles.alpha}
               />
               <Button
@@ -168,6 +183,11 @@ const Layer = (props) => {
                     <EyeInvisibleOutlined className={classnames(styles.icon)} />
                   )
                 }
+                onClick={() => {
+                  onChangeComplete({
+                    visible: !visible,
+                  });
+                }}
               />
             </Col>
           </Row>

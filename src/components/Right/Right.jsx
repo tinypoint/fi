@@ -4,6 +4,7 @@ import classnames from "classnames";
 import {
   add,
   propchange,
+  changeCachePosi,
   select,
   hover,
   clearHover,
@@ -13,6 +14,7 @@ import * as jsonutils from "../Canvas/utils/json";
 import Panel from "./components/Panel/Panel";
 import Layer from "./components/Layer/Layer";
 import Fill from "./components/Fill/Fill";
+import Stroke from "./components/Stroke/Stroke";
 import "./Right.css";
 
 import alignStart from "bootstrap-icons/icons/align-start.svg";
@@ -30,8 +32,20 @@ class Right extends Component {
       return null;
     }
     const sel = jsonutils.search(json, select[0]);
-    const { width = sel.width, height = sel.height, x = sel.x, y = sel.y } =
-      cacheposi || {};
+    const {
+      width = sel.width,
+      height = sel.height,
+      x = sel.x,
+      y = sel.y,
+      angle = sel.angle,
+      backgrounds = sel.backgrounds,
+      alpha = sel.alpha,
+      strokes = sel.strokes,
+      visible = sel.visible,
+      strokeAlignment = sel.strokeAlignment,
+      strokeWidth = sel.strokeWidth,
+    } = cacheposi || {};
+
     // const sel = cacheposi;
     return (
       <div className="right-area">
@@ -107,7 +121,12 @@ class Right extends Component {
           <div className="right-area-raw-row">
             <label className="right-area-field-container">
               <span className="right-area-field-label">A</span>
-              <input type="text" className="right-area-input" />
+              <input
+                type="text"
+                className="right-area-input"
+                value={angle}
+                onChange={() => {}}
+              />
             </label>
             <label className="right-area-field-container">
               <span className="right-area-field-label">B</span>
@@ -117,8 +136,67 @@ class Right extends Component {
         </div>
 
         <Panel>
-          <Layer />
-          <Fill />
+          <Layer
+            visible={visible}
+            alpha={alpha}
+            onChange={(props) => {
+              dispatch(
+                changeCachePosi({
+                  id: sel.id,
+                  ...props,
+                })
+              );
+            }}
+            onChangeComplete={(props) => {
+              dispatch(
+                propchange({
+                  id: sel.id,
+                  ...props,
+                })
+              );
+            }}
+          />
+          <Fill
+            backgrounds={backgrounds}
+            alpha={alpha}
+            onChange={(props) => {
+              dispatch(
+                changeCachePosi({
+                  id: sel.id,
+                  ...props,
+                })
+              );
+            }}
+            onChangeComplete={(props) => {
+              dispatch(
+                propchange({
+                  id: sel.id,
+                  ...props,
+                })
+              );
+            }}
+          />
+          <Stroke
+            strokeAlignment={strokeAlignment}
+            strokeWidth={strokeWidth}
+            strokes={strokes}
+            onChange={(props) => {
+              dispatch(
+                changeCachePosi({
+                  id: sel.id,
+                  ...props,
+                })
+              );
+            }}
+            onChangeComplete={(props) => {
+              dispatch(
+                propchange({
+                  id: sel.id,
+                  ...props,
+                })
+              );
+            }}
+          />
         </Panel>
       </div>
     );
@@ -130,7 +208,6 @@ export default connect(
     return {
       json: state.canvas.json,
       select: state.canvas.select,
-      hover: state.canvas.hover,
       cacheposi: state.canvas.cacheposi,
     };
   },

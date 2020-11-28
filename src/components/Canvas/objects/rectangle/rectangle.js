@@ -1,60 +1,73 @@
-import * as PIXI from 'pixi.js';
-import * as graphicsutils from '../../utils/graphics';
+import * as PIXI from "pixi.js";
+import * as graphicsutils from "../../utils/graphics";
 
 class Rectangle extends PIXI.Graphics {
-  constructor(option, props) {
+  constructor(option) {
     super();
-    this._update(option, props);
+    this._update(option);
   }
 
   _update = (option, props) => {
-    const {
-      id,
-      x,
-      y,
-      background = ['#cccccc'],
-      width,
-      height,
-      alpha = 1,
-      angle
-    } = option;
-    const { select = [] } = props;
     this.option = option;
-    this.props = props;
-    this.clear();
-    this.beginFill(PIXI.utils.string2hex(background[0]));
-    this.drawRect(0, 0, width, height);
-    this.endFill();
-    this.x = x;
-    this.y = y;
-    this.alpha = alpha;
-    this.angle = angle;
-    this.interactive = true;
-    this.buttonMode = true;
-    this.pivot.x = width / 2;
-    this.pivot.y = height / 2;
-    /* <--   --> */
-    // if (select.indexOf(id) > -1) {
-    //   graphicsutils.select(this, 0, 0, width, height);
-    // }
+    this._updateTransform(option);
   };
 
-  _updateTransform = option => {
+  _updateTransform = (option) => {
     const {
       x = this.option.x,
       y = this.option.y,
       width = this.option.width,
       height = this.option.height,
-      angle = this.option.angle
+      angle = this.option.angle,
+      alpha = this.option.alpha,
+      visible = this.option.visible,
+      backgrounds = this.option.backgrounds,
+      strokes = this.option.strokes,
+      strokeAlignment = this.option.strokeAlignment,
+      strokeWidth = this.option.strokeWidth,
     } = option;
-    const { background = ['#cccccc'] } = this.option;
+
     this.clear();
-    this.beginFill(PIXI.utils.string2hex(background[0]));
+    this.beginFill(0xffffff, 0.001);
     this.drawRect(0, 0, width, height);
     this.endFill();
-    this.x = x;
-    this.y = y;
-    this.angle = angle;
+
+    if (backgrounds.length) {
+      backgrounds.forEach((background) => {
+        if (!background.visible) {
+          return;
+        }
+        this.beginFill(
+          PIXI.utils.string2hex(background.color),
+          background.alpha
+        );
+        this.drawRect(0, 0, width, height);
+        this.endFill();
+      });
+    }
+
+    if (strokes.length) {
+      strokes.forEach((stroke) => {
+        if (!stroke.visible) {
+          return;
+        }
+        this.lineStyle(
+          stroke.width,
+          PIXI.utils.string2hex(stroke.color),
+          strokeWidth,
+          strokeAlignment
+        );
+        this.drawRect(0, 0, width, height);
+      });
+    }
+
+    this.x = x + width / 2;
+    this.y = y + height / 2;
+    this.alpha = alpha;
+    this.visible = visible;
+    this.angle = -angle;
+    this.interactive = true;
+    this.buttonMode = true;
     this.pivot.x = width / 2;
     this.pivot.y = height / 2;
   };
