@@ -12,6 +12,7 @@ import {
 } from "../Canvas/canvasSlice";
 import * as jsonutils from "../Canvas/utils/json";
 import Panel from "./components/Panel/Panel";
+import Position from "./components/Position/Position";
 import Layer from "./components/Layer/Layer";
 import Fill from "./components/Fill/Fill";
 import Stroke from "./components/Stroke/Stroke";
@@ -77,65 +78,30 @@ class Right extends Component {
             </div>
           </div>
         </div>
-        <div className="right-area-raw-panel">
-          <div className="right-area-raw-row">
-            <label className="right-area-field-container">
-              <span className="right-area-field-label">X</span>
-              <input
-                type="text"
-                className="right-area-input"
-                value={x}
-                onChange={() => {}}
-              />
-            </label>
-            <label className="right-area-field-container">
-              <span className="right-area-field-label">Y</span>
-              <input
-                type="text"
-                className="right-area-input"
-                value={y}
-                onChange={() => {}}
-              />
-            </label>
-          </div>
-          <div className="right-area-raw-row">
-            <label className="right-area-field-container">
-              <span className="right-area-field-label">W</span>
-              <input
-                type="text"
-                className="right-area-input"
-                value={width}
-                onChange={() => {}}
-              />
-            </label>
-            <label className="right-area-field-container">
-              <span className="right-area-field-label">H</span>
-              <input
-                type="text"
-                className="right-area-input"
-                value={height}
-                onChange={() => {}}
-              />
-            </label>
-          </div>
-          <div className="right-area-raw-row">
-            <label className="right-area-field-container">
-              <span className="right-area-field-label">A</span>
-              <input
-                type="text"
-                className="right-area-input"
-                value={angle}
-                onChange={() => {}}
-              />
-            </label>
-            <label className="right-area-field-container">
-              <span className="right-area-field-label">B</span>
-              <input type="text" className="right-area-input" />
-            </label>
-          </div>
-        </div>
-
         <Panel>
+          <Position
+            x={x}
+            y={y}
+            width={width}
+            height={height}
+            angle={angle}
+            onChange={(props) => {
+              dispatch(
+                changeCachePosi({
+                  id: sel.id,
+                  ...props,
+                })
+              );
+            }}
+            onChangeComplete={(props) => {
+              dispatch(
+                propchange({
+                  id: sel.id,
+                  ...props,
+                })
+              );
+            }}
+          />
           <Layer
             visible={visible}
             alpha={alpha}
@@ -156,7 +122,7 @@ class Right extends Component {
               );
             }}
           />
-          <Fill
+          {/* <Fill
             backgrounds={backgrounds}
             alpha={alpha}
             onChange={(props) => {
@@ -175,7 +141,7 @@ class Right extends Component {
                 })
               );
             }}
-          />
+          /> */}
           <Stroke
             strokeAlignment={strokeAlignment}
             strokeWidth={strokeWidth}

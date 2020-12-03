@@ -22,17 +22,19 @@ import classnames from "classnames";
 import { BLEND_MODES } from "pixi.js";
 import { ReactComponent as Droplet } from "bootstrap-icons/icons/droplet.svg";
 import { SketchPicker } from "react-color";
-import styles from "./Stroke.module.scss";
+import InputSize from "../../../../components/InputSize/InputSize";
+import styles from "./Position.module.scss";
 
 const { Option } = Select;
 
-class Stroke extends Component {
+class Position extends Component {
   render() {
     const {
-      strokeAlignment,
-      strokeWidth,
-      strokes = [],
-      alpha = 1,
+      x,
+      y,
+      width,
+      height,
+      angle,
       onChange = () => {},
       onChangeComplete = () => {},
     } = this.props;
@@ -40,6 +42,68 @@ class Stroke extends Component {
     return (
       <div className={styles.panel}>
         <div className={styles.row}>
+          <Row gutter={8} align="middle" style={{ height: 32 }}>
+            <Col span={9}>
+              <InputSize
+                value={x}
+                suffix="X"
+                onChange={(value) => {
+                  onChangeComplete({
+                    x: value,
+                  });
+                }}
+              />
+            </Col>
+            <Col span={9}>
+              <InputSize
+                value={y}
+                suffix="Y"
+                onChange={(value) => {
+                  onChangeComplete({
+                    y: value,
+                  });
+                }}
+              />
+            </Col>
+          </Row>
+        </div>
+        <div className={styles.row}>
+          <Row gutter={8} align="middle" style={{ height: 32 }}>
+            <Col span={9}>
+              <InputSize
+                value={width}
+                suffix="W"
+                onChange={(value) => {
+                  onChangeComplete({
+                    width: value,
+                  });
+                }}
+              />
+            </Col>
+            <Col span={9}>
+              <InputSize
+                value={height}
+                suffix="H"
+                onChange={(value) => {
+                  onChangeComplete({
+                    height: value,
+                  });
+                }}
+              />
+            </Col>
+          </Row>
+        </div>
+        <div className={styles.row}>
+          <Row gutter={8} align="middle" style={{ height: 32 }}>
+            <Col span={9}>
+              <InputSize value={angle} suffix="W" />
+            </Col>
+            <Col span={9}>
+              <InputSize value={height} suffix="H" />
+            </Col>
+          </Row>
+        </div>
+        {/* <div className={styles.row}>
           <Row justify="space-between">
             <Col>
               <div className={styles.panelTitle}>Stroke</div>
@@ -185,21 +249,16 @@ class Stroke extends Component {
           })}
           <Row justify="space-between">
             <Col span={14}>
-              <label className="right-area-field-container">
-                <span className="right-area-field-label">
-                  <MenuOutlined />
-                </span>
-                <input
-                  type="text"
-                  className="right-area-input"
-                  value={strokeWidth}
-                  onChange={(value) => {
-                    // onChangeComplete({
-                    //   strokeWidth: value,
-                    // });
-                  }}
-                />
-              </label>
+              <Input
+                className={styles.color}
+                value={strokeWidth}
+                onChange={(value) => {
+                  // onChangeComplete({
+                  //   strokeWidth: value,
+                  // });
+                }}
+                prefix={<MenuOutlined />}
+              />
             </Col>
             <Col className={styles.right} span={10}>
               <Select
@@ -217,9 +276,10 @@ class Stroke extends Component {
             </Col>
           </Row>
         </div>
+       */}
       </div>
     );
   }
 }
 
-export default Stroke;
+export default Position;

@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { utils } from "pixi.js";
 import * as jsonutils from "./utils/json";
 
+var uid = utils.uid();
+
 const createInitState = () => {
   return {
     id: utils.uid(),
@@ -10,7 +12,7 @@ const createInitState = () => {
     type: "artboard",
     children: [
       {
-        id: utils.uid(),
+        id: uid,
         x: 50,
         y: 50,
         type: "rectangle",
@@ -45,7 +47,7 @@ export const canvasSlice = createSlice({
   name: "canvas",
   initialState: {
     json: createInitState(),
-    select: [],
+    select: [uid],
     hover: [],
     activednav: "cursor",
     cacheposi: {},

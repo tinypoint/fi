@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import * as PIXI from "pixi.js";
-import "@pixi/graphics-extras";
 import { connect } from "react-redux";
 import {
   add,

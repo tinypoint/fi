@@ -1,0 +1,62 @@
+.label {
+  width: 100%;
+  cursor: ew-resize;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  height: 28px;
+  margin: 1px 0;
+  box-sizing: border-box;
+
+  &:hover {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus-within {
+    height: 30px;
+    margin: 0;
+    border: 1px solid #18a0fb;
+    outline: 1px solid #18a0fb;
+    outline-offset: -2px;
+  }
+}
+
+.suffix {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  line-height: 32px;
+  font-size: 11px;
+  color: #b3b3b3;
+  fill: #b3b3b3;
+  pointer-events: none;
+  text-align: center;
+}
+
+.inputsize {
+  flex: 1;
+  border: 1px solid transparent;
+  box-shadow: none;
+  background-color: transparent;
+
+  :global .ant-input-number-input {
+    height: 24px;
+    padding-left: 0;
+    padding-right: 0;
+    cursor: default;
+  }
+
+  :global .ant-input-number-handler-wrap {
+    display: none;
+  }
+
+  &:hover {
+    border-color: transparent;
+    border-right-width: 1px !important;
+  }
+}
